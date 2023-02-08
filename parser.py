@@ -15,16 +15,16 @@ def create_parser():
     parser.add_argument('--seed', default=111, type=int)
 
     # dataset parameters
-    parser.add_argument('--batch_size', default=16, type=int)
+    parser.add_argument('--batch_size', default=8, type=int)
     parser.add_argument('--val_batch_size', default=4, type=int)
-    parser.add_argument('--num_workers', default=8, type=int)
+    parser.add_argument('--num_workers', default=4, type=int)
     parser.add_argument('--data_root', default='./data/')
     parser.add_argument('--dataname', default='mmnist',
                         choices=['mmnist'])
 
     # method parameters
     parser.add_argument('--method', default='SimVP', choices=[
-                        'SimVP', 'ConvLSTM', 'PredRNNpp', 'PredRNN', 'PredRNNv2', 'MIM', 'E3DLSTM', 'MAU', 'CrevNet', 'PhyDNet'])
+        'SimVP', 'ConvLSTM', 'PredRNNpp', 'PredRNN', 'PredRNNv2', 'MIM', 'E3DLSTM', 'MAU', 'CrevNet', 'PhyDNet'])
     parser.add_argument('--config_file', '-c', default='./configs/SimVP.py', type=str)
 
     # Training parameters

@@ -1,4 +1,6 @@
 import os.path as osp
+import shutil
+
 from addict import Dict
 import tempfile
 import re
@@ -24,7 +26,7 @@ class Config:
                             f'got {type(cfg_dict)}')
 
         if filename is not None:
-            cfg_dict = self._file2dict(filename, True)
+            cfg_dict = self._file2dict(filename, False)
             filename = filename
 
         super(Config, self).__setattr__('_cfg_dict', cfg_dict)
@@ -68,33 +70,37 @@ class Config:
         if fileExtname not in ['.py']:
             raise IOError('Only py type are supported now!')
 
-        with tempfile.TemporaryDirectory() as temp_config_dir:
-            temp_config_file = tempfile.NamedTemporaryFile(
-                dir=temp_config_dir, suffix=fileExtname)
-            temp_config_name = osp.basename(temp_config_file.name)
+        temp_config_dir = 'configs/temp_config_dir'
+        # temp_config_file = tempfile.NamedTemporaryFile(
+        #     dir=temp_config_dir, suffix=fileExtname)
+        temp_config_file = temp_config_dir + '/temp_config_file.py'
+        # temp_config_name = osp.basename(temp_config_file.name)
+        temp_config_name = 'temp_config_file.py'
 
-            # Substitute predefined variables
-            if use_predefined_variables:
-                Config._substitute_predefined_vars(filename,
-                                                   temp_config_file.name)
-            else:
-                shutil.copyfile(filename, temp_config_file.name)
+        temp_config_file_name = 'D:\\workspace\\pythonPro\\SimVPv2\\configs\\temp_config_dir\\temp_config_file.py'
 
-            if filename.endswith('.py'):
-                temp_module_name = osp.splitext(temp_config_name)[0]
-                sys.path.insert(0, temp_config_dir)
-                Config._validate_py_syntax(filename)
-                mod = import_module(temp_module_name)
-                sys.path.pop(0)
-                cfg_dict = {
-                    name: value
-                    for name, value in mod.__dict__.items()
-                    if not name.startswith('__')
-                }
-                # delete imported module
-                del sys.modules[temp_module_name]
-            # close temp file
-            temp_config_file.close()
+        # Substitute predefined variables
+        if use_predefined_variables:
+            Config._substitute_predefined_vars(filename,
+                                               temp_config_file_name)
+        else:
+            shutil.copyfile(filename, temp_config_file_name)
+
+        if filename.endswith('.py'):
+            temp_module_name = osp.splitext(temp_config_name)[0]
+            sys.path.insert(0, temp_config_dir)
+            Config._validate_py_syntax(filename)
+            mod = import_module(temp_module_name)
+            sys.path.pop(0)
+            cfg_dict = {
+                name: value
+                for name, value in mod.__dict__.items()
+                if not name.startswith('__')
+            }
+            # delete imported module
+            del sys.modules[temp_module_name]
+        # close temp file
+        # temp_config_file.close()
         return cfg_dict
 
     @staticmethod

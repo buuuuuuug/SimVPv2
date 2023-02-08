@@ -53,7 +53,7 @@ class MovingMNIST(data.Dataset):
         self.std = 1
 
     def get_random_trajectory(self, seq_length):
-        ''' Generate a random sequence of a MNIST digit '''
+        """ Generate a random sequence of a MNIST digit """
         canvas_size = self.image_size_ - self.digit_size_
         x = random.random()
         y = random.random()
@@ -97,9 +97,9 @@ class MovingMNIST(data.Dataset):
         return start_y, start_x
 
     def generate_moving_mnist(self, num_digits=2):
-        '''
+        """
         Get random trajectories for the digits and generate a video.
-        '''
+        """
         data = np.zeros((self.n_frames_total, self.image_size_,
                          self.image_size_), dtype=np.float32)
         for n in range(num_digits):
